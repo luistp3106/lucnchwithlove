@@ -77,13 +77,17 @@ function ajax(method, url, data){
     });
 }
 
-function ajax2(method, url, data) {
+function getFullUrl(url){
+  return `${location.protocol}//${location.hostname}:3032${url}`;
+}
+
+function ajax2(method, url, data, contentType = "application/json") {
     return new Promise(function (resolve) {
         $.ajax ({
             type: method,
             url: `${location.protocol}//${location.hostname}:3032${url}`,
             dataType: "json",
-            contentType: "application/json",
+            contentType: contentType,
             data: JSON.stringify(data),
             success: function (jsonData, textStatus, xhr) {
                 if (xhr.status === 401) location.href = "login.html";

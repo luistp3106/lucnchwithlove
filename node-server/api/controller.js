@@ -8,13 +8,13 @@ const crypto = require('../security/crypto');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'madresmilrd@gmail.com',
-        pass: 'madresmil3101'
+        user: 'lunchwithlovewebapp@gmail.com',
+        pass: 'lunchwebapp'
     }
 });
 let mailOptions = {
-    from: 'Madres Mil RD <madresmilrd@gmail.com>',
-    to: 'madresmilrd@gmail.com',
+    from: 'Lunch With Love RD <lunchwithlovewebapp@gmail.com>',
+    to: 'lunchwithlovewebapp@gmail.com',
     // to: 'edison22_1997@live.com',
     subject: '',
     html: ''
@@ -46,6 +46,7 @@ router.post("/sendMail", async (req, res) => {
 router.post("/manageFormulario", async (req, res) => {
     try {
         let {form} = req.body;
+        console.log(req.body);
 		logic.cleanObjectProperties(form, ['santiago', 'modalidad', 'date', 'nombre', 'area', 'servicio', 'email', 'telefono']);
         let finalDate = new Date(form.date), initialDate = new Date(form.date);
         finalDate.setMinutes(finalDate.getMinutes() + 179);
@@ -79,20 +80,69 @@ router.post("/manageFormulario", async (req, res) => {
 		});
 		await models.formulario.create({json: form});
 		let m = logic.noPointer(mailOptions);
-		m.subject = `Asesoría en lactancia materna para  "${form.nombre.toUpperCase()}"`;
+		m.subject = `Cita Dra Tahirih Hawa Lunch with Love  "${form.nombre.toUpperCase()}"`;
 		let cita = new Date(form.date);
 		m.html = `
-			Hola Genesis, ¡En buena hora! tienes una cita nueva, a continuación los datos de la misma:
+			Hola Dra. Hawa, ¡En buena hora! tienes una cita nueva, a continuación los datos de la misma:
 			<br>
 			<br>
 
-		  Nombre completo: <b>${form.nombre.toUpperCase()}</b><br>
-		  Asesoría en:: <b>${form.servicio.toUpperCase()}</b><br>
-		  Modalidad: <b>${form.modalidad.toUpperCase()}</b><br>
-		  Área: <b>${form.area.toUpperCase()}</b><br>
-		  E-mail: <b>${form.email.toLowerCase()}<br></b>
-		  Teléfono: <b>${form.telefono.toLowerCase()}<br></b>
-		  Fecha y hora de la cita: <b>${form.fechaEnString}<br></b>
+		  Nombre completo pasciente: <b>${form.nombreh.toUpperCase()}</b><br>
+		  Peso:: <b>${form.peso.toUpperCase()}</b><br>
+		  Estatura: <b>${form.estatura.toUpperCase()}</b><br>
+		  Edad: <b>${form.edad.toUpperCase()}</b><br>
+		  El niño tienes hermanos?: <b>${form.hermanos.toLowerCase()}<br></b>
+		  Cantidad Hermanos: <b>${form.canther.toLowerCase()}<br></b>
+		  Asiste a guarderia: <b>${form.guarderia.toLowerCase()}<br></b>
+      Fecha de Nacimiento: <b>${form.fechaEnString}<br></b>
+      Genero: <b>${form.genero.toLowerCase()}<br></b>
+      Forma parto: <b>${form.parto.toLowerCase()}<br></b>
+      Semanas del bebe al nacer: <b>${form.nacimiento.toLowerCase()}<br></b>
+      Peso al nacer: <b>${form.peson.toLowerCase()}<br></b>
+      Estatura al nacer: <b>${form.estaturan.toLowerCase()}<br></b>
+      Complicaciones del parto: <b>${form.partoc.toLowerCase()}<br></b>
+      Sufre el niño alguna enfermedad: <b>${form.enfermedad.toLowerCase()}<br></b>
+      Si la respuesta anterior es SI especifica cuál es la patología: <b>${form.enfermedadd.toLowerCase()}<br></b>
+      Cirugias previas: <b>${form.cirugiaspre.toLowerCase()}<br></b>
+      Sufre el niño de alguna alergia: <b>${form.alergia.toLowerCase()}<br></b>
+      Medicamento usado para la alergia: <b>${form.guarderia.toLowerCase()}<br></b>
+      Fuente alimentacion primeros 6 meses: <b>${form.guarderia.toLowerCase()}<br></b>
+      Comienzo alimentacion Complementaria: <b>${form.comple.toLowerCase()}<br></b>
+      Metodo alimentacion Complementaria: <b>${form.alimentacionc.toLowerCase()}<br></b>
+      Primeros alimentos ofrecido al bebe: <b>${form.primeros.toLowerCase()}<br></b>
+      A qué edad se introdujeron comidas que contenían sal y azúcar?: <b>${form.salya.toLowerCase()}<br></b>
+      Horarios de comidas establecidos actualmente: <b>${form.horariosc.toLowerCase()}<br></b>
+      ¿Cuántas veces al día come el niño?: <b>${form.ingesc.toLowerCase()}<br></b>
+      Cuál es el tiempo promedio que tu hijo/a dura en cada comida?: <b>${form.tiempop.toLowerCase()}<br></b>
+      Quién alimenta al niño la mayoría de las veces?: <b>${form.quiena.toLowerCase()}<br></b>
+      El niño como con la Familia: <b>${form.comefam.toLowerCase()}<br></b>
+      Lugar donde comen: <b>${form.lugarc.toLowerCase()}<br></b>
+      ¿Cuántas veces por semana le brinda alimentos tales como: carnes, pollo, hígado, pescado, morcilla?: <b>${form.cantal.toLowerCase()}<br></b>
+      Alergia Alimentarias: <b>${form.alergiaa.toLowerCase()}<br></b>
+      Si la respuesta anterior es SI cuéntame a cuál o cuáles alimentos es alérgico tu niño/a: <b>${form.alialer.toLowerCase()}<br></b>
+      Cambias la alimentacion cuando el niño esta enfermo: <b>${form.cambioali.toLowerCase()}<br></b>
+      Comenta datos de interés de la alimentación de tu hijo/a:: <b>${form.comena.toLowerCase()}<br></b>
+      Nombre Tutor: <b>${form.nombret.toLowerCase()}<br></b>
+      Telefono Tutor: <b>${form.telt.toLowerCase()}<br></b>
+      Dirrecion Tutor: <b>${form.diret.toLowerCase()}<br></b>
+      Email Tutor: <b>${form.emailt.toLowerCase()}<br></b>
+      Trabajo Tutor: <b>${form.trabajot.toLowerCase()}<br></b>
+      Cuántas horas de tu día dispones para dedicar a tu hijo/a?: <b>${form.horash.toLowerCase()}<br></b>
+      Qué te motiva a consultar con nosotros o formar parte de uno de nuestros programas?: <b>${form.moti.toLowerCase()}<br></b>
+      Comentarios o inquietudes: <b>${form.comenp.toLowerCase()}<br></b>
+      Programa: <b>${form.servicio.toLowerCase()}<br></b>
+      Modalidad: <b>${form.modalidad.toLowerCase()}<br></b>
+    
+
+
+
+
+
+
+
+
+
+
 		`;
 		transporter.sendMail(m, async function (error, info) {
 			if (error) {
@@ -105,19 +155,20 @@ router.post("/manageFormulario", async (req, res) => {
 
 				m.html = `
           <hr class="mt-0 mb-60 " style="color: #F2B2B0"/>
-        <div class="footer-made" style="text-align:center;color:#ffffff; font-size:22px; background-color: #F2B2B0">
-          Genesis Nouel<br>
+        <div class="footer-made" style="text-align:center;color:#000; font-size:22px; background-color: #49A1D0">
+          Dra. Tahirih Hawa - Lunch with Love RD<br>
           <h2 class="hs-line-3 mb-0">
-              Asesora de Lactancia Materna    &bull;   Alimentación Complementaria
+              Doctora en medicina    &bull;   Especialidad Nutriologa
           </h2>
         </div>
         <br><br>
         <div style="text-align:justify">
-        Luego de un cordial y afectuoso saludo ${form.nombre.toUpperCase()}, me complace que formes parte de nuestra hermosa comunidad de madres que se interesan y preocupan  por educarse en cuanto al tema de la Lactancia Materna y cuidados del recién nacido
+        Luego de un cordial y afectuoso saludo ${form.nombre.toUpperCase()}, me complace que formes parte de nuestra hermosa comunidad de padres que se interesan y preocupan  por educarse en cuanto al tema de la Lactancia Materna y cuidados del recién nacido
           </div>
 						<br><br>
             <div style="text-align:justify">
-            Soy Genesis Nouel, Asesora de Lactancia Materna y Alimentación Complementaria, fundadora del proyecto Madres Mil.
+            Hola, soy Tahirih Hawa, doctora en medicina, cursando la especialidad de Nutrición Clínica Hospitalaria y un Máster en Nutrición Clínica en Pediatría. Soy madre de una hermosa niña de 6 años y esposa del mejor hombre del mundo <br> <br>
+            Tengo un profundo deseo por ayudar a padres y madres que luchan día tras día con problemas de la alimentación de sus hijos
             </div>
 						<br><br>
             <div style="text-align:justify">
@@ -131,19 +182,19 @@ router.post("/manageFormulario", async (req, res) => {
             <br>
             <div style="text-align:justify">
 						Esta es la fecha de nuestro encuentro: <b>${form.fechaEnString}<br></b>
-						Esta es la asesoría que elegiste: <b>${form.servicio.toUpperCase()}</b><br>
+						Esta es el servicio: <b>${form.servicio.toUpperCase()}</b><br>
 						<br><br>
-					Para Fines de pago me estaré comunicando contigo para enviarte mis cuentas o un link de pago mediante el cual puedes pagar con tarjetas de crédito/débito o PayPal Nos puedes contactar por WhatsApp o llamarnos al: 849-215-9555 Para cualquier aclaración
+				Puedes realizar el pago de tus servicios mediante con PayPal mediante nuestra página si necesitas un numero de cuenta para pagar los servicios por favor contactarme al 829-716-1628
   </div>
 <br><br>
-					</p>  <footer class="small-section bg-gray-lighter footer pb-60" id="contact" style="background-color: #F2B2B0">
-          <div style="background-color: #FCFEEC">
-                      <h2 class="section-title font-alt align-center mb-70 mb-sm-40" style="color: #FB605B ; font-size: 45px;text-align:center;" >
+					</p>  <footer class="small-section bg-gray-lighter footer pb-60" id="contact" style="background-color: #fff">
+          <div style="background-color: #49A1D0">
+                      <h2 class="section-title font-alt align-center mb-70 mb-sm-40" style="color: #49A1D0 ; font-size: 45px;text-align:center;" >
 
-                          <a href="https://wa.me/18492159555" target="_blank"> Contáctame por WhatsApp</a>
+                          <a href="https://wa.me/18297161628" target="_blank"> Contáctame por WhatsApp</a>
                       </h2>
 </div>
-                            <hr class="mt-0 mb-60 " style="color: #F2B2B0"/>
+                            <hr class="mt-0 mb-60 " style="color: #49A1D0"/>
 
 
 
@@ -157,9 +208,9 @@ router.post("/manageFormulario", async (req, res) => {
 
                                 <!-- End Copyright -->
 
-                                <div class="footer-made" style="text-align:center;color:#ffffff; font-size:22px; background-color: #F2B2B0">
+                                <div class="footer-made" style="text-align:center;color:#ffffff; font-size:22px; background-color: #49A1D0">
                                   Gracias por ser parte de nuestra familia<br>
-                                  <a href="http://madresmilrd.com/" target="_blank"> Madresmilrd.com</a>
+                                  <a href="http://lunchwirhloverd.com/" target="_blank"> lunchwithloverd.com</a>
                                 </div>
 
                             </div>

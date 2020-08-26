@@ -417,7 +417,7 @@ Primary use:    MultiPurpose Template
     }
 
     .hs-line-11{
-        font-size: 24px;
+        font-size: 40px;
     }
 
     .hs-line-12{
@@ -610,12 +610,7 @@ Primary use:    MultiPurpose Template
 
   }
 
-.h1{
-  font-size: 32px;
-}
-.h3{
-  font-size: 30px;
-}
+
   .container1{
     margin-left: 0px;
   }
@@ -673,7 +668,7 @@ Primary use:    MultiPurpose Template
         font-size: 42px;
     }
     .hs-line-11 {
-        font-size: 20px;
+        font-size: 40px;
     }
     .hs-line-12 {
         font-size: 32px;
@@ -759,9 +754,7 @@ Primary use:    MultiPurpose Template
     .tpl-alt-tabs > li{
         width: 120px;
     }
-    .alt-tabs-icon{
-        font-size: 32px;
-    }
+  
 
     .work-container {
         padding: 30px 0;
