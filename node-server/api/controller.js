@@ -47,113 +47,93 @@ router.post("/manageFormulario", async (req, res) => {
     try {
         let {form} = req.body;
         console.log(req.body);
-		logic.cleanObjectProperties(form, ['santiago', 'modalidad', 'date', 'nombre', 'area', 'servicio', 'email', 'telefono']);
+        logic.cleanUserName(form, ['nombreh', 'peso', 'estatura', 'edad', 'hermanos', 'canther', 'guarderia',
+            'fechaEnString', 'genero', 'parto', 'nacimiento', 'peson', 'estaturan', 'partoc', 'enfermedad', 'enfermedadd',
+            'cirugiaspre', 'alergia', 'guarderia', 'guarderia', 'comple', 'alimentacionc', 'primeros', 'salya', 'horariosc',
+            'ingesc', 'tiempop', 'quiena', 'comefam', 'lugarc', 'cantal', 'alialer', 'cambioali', 'comena', 'nombret', 'telt',
+            'diret', 'emailt', 'trabajot', 'horash', 'moti', 'comenp', 'servicio', 'modalidad']);
         let finalDate = new Date(form.date), initialDate = new Date(form.date);
         finalDate.setMinutes(finalDate.getMinutes() + 179);
-		let RDDate = new Date(initialDate);
-		RDDate.setHours(RDDate.getHours() - 4);
-		let citas = await models.cita.count({
-			where: models.Sequelize.literal(`'${initialDate.toISOString()}' between fecha_inicio and fecha_fin
+        let RDDate = new Date(initialDate);
+        RDDate.setHours(RDDate.getHours() - 4);
+        let citas = await models.cita.count({
+            where: models.Sequelize.literal(`'${initialDate.toISOString()}' between fecha_inicio and fecha_fin
 				or '${finalDate.toISOString()}' between fecha_inicio and fecha_fin `)
-		});
-		if (citas > 0) {
-			res.json({status: false, message: `Esta cita choca con ${citas} cita(s)`});
-			return;
-		}
-		if (form.santiago === "no" && form.modalidad === "Servicio a Domicilio") {
-			res.json({status: false, message: 'No se ofrece servicio a domicilio fuera de Santiago'});
-			return;
-		}
-		if (RDDate.getDay() === 0) {
-			res.json({status: false, message: 'No laboramos los domingos'});
-			return;
-		}
-		if (RDDate.getDay() === 6 && RDDate.getHours() > 11) {
-			res.json({status: false, message: 'Solo laboramos los sábados hasta las 12 del medio día'});
-			return;
-		}
+        });
+        if (citas > 0) {
+            res.json({status: false, message: `Esta cita choca con ${citas} cita(s)`});
+            return;
+        }
         await models.cita.create({
-			nombre_paciente: form.nombre,
-			fecha_inicio: initialDate,
-			fecha_fin: finalDate,
-			tipo_cita: form.area
-		});
-		await models.formulario.create({json: form});
-		let m = logic.noPointer(mailOptions);
-		m.subject = `Cita Dra Tahirih Hawa Lunch with Love  "${form.nombre.toUpperCase()}"`;
-		let cita = new Date(form.date);
-		m.html = `
-			Hola Dra. Hawa, ¡En buena hora! tienes una cita nueva, a continuación los datos de la misma:
-			<br>
-			<br>
-
-		  Nombre completo pasciente: <b>${form.nombreh.toUpperCase()}</b><br>
-		  Peso:: <b>${form.peso.toUpperCase()}</b><br>
-		  Estatura: <b>${form.estatura.toUpperCase()}</b><br>
-		  Edad: <b>${form.edad.toUpperCase()}</b><br>
-		  El niño tienes hermanos?: <b>${form.hermanos.toLowerCase()}<br></b>
-		  Cantidad Hermanos: <b>${form.canther.toLowerCase()}<br></b>
-		  Asiste a guarderia: <b>${form.guarderia.toLowerCase()}<br></b>
-      Fecha de Nacimiento: <b>${form.fechaEnString}<br></b>
-      Genero: <b>${form.genero.toLowerCase()}<br></b>
-      Forma parto: <b>${form.parto.toLowerCase()}<br></b>
-      Semanas del bebe al nacer: <b>${form.nacimiento.toLowerCase()}<br></b>
-      Peso al nacer: <b>${form.peson.toLowerCase()}<br></b>
-      Estatura al nacer: <b>${form.estaturan.toLowerCase()}<br></b>
-      Complicaciones del parto: <b>${form.partoc.toLowerCase()}<br></b>
-      Sufre el niño alguna enfermedad: <b>${form.enfermedad.toLowerCase()}<br></b>
-      Si la respuesta anterior es SI especifica cuál es la patología: <b>${form.enfermedadd.toLowerCase()}<br></b>
-      Cirugias previas: <b>${form.cirugiaspre.toLowerCase()}<br></b>
-      Sufre el niño de alguna alergia: <b>${form.alergia.toLowerCase()}<br></b>
-      Medicamento usado para la alergia: <b>${form.guarderia.toLowerCase()}<br></b>
-      Fuente alimentacion primeros 6 meses: <b>${form.guarderia.toLowerCase()}<br></b>
-      Comienzo alimentacion Complementaria: <b>${form.comple.toLowerCase()}<br></b>
-      Metodo alimentacion Complementaria: <b>${form.alimentacionc.toLowerCase()}<br></b>
-      Primeros alimentos ofrecido al bebe: <b>${form.primeros.toLowerCase()}<br></b>
-      A qué edad se introdujeron comidas que contenían sal y azúcar?: <b>${form.salya.toLowerCase()}<br></b>
-      Horarios de comidas establecidos actualmente: <b>${form.horariosc.toLowerCase()}<br></b>
-      ¿Cuántas veces al día come el niño?: <b>${form.ingesc.toLowerCase()}<br></b>
-      Cuál es el tiempo promedio que tu hijo/a dura en cada comida?: <b>${form.tiempop.toLowerCase()}<br></b>
-      Quién alimenta al niño la mayoría de las veces?: <b>${form.quiena.toLowerCase()}<br></b>
-      El niño como con la Familia: <b>${form.comefam.toLowerCase()}<br></b>
-      Lugar donde comen: <b>${form.lugarc.toLowerCase()}<br></b>
-      ¿Cuántas veces por semana le brinda alimentos tales como: carnes, pollo, hígado, pescado, morcilla?: <b>${form.cantal.toLowerCase()}<br></b>
-      Alergia Alimentarias: <b>${form.alergiaa.toLowerCase()}<br></b>
-      Si la respuesta anterior es SI cuéntame a cuál o cuáles alimentos es alérgico tu niño/a: <b>${form.alialer.toLowerCase()}<br></b>
-      Cambias la alimentacion cuando el niño esta enfermo: <b>${form.cambioali.toLowerCase()}<br></b>
-      Comenta datos de interés de la alimentación de tu hijo/a:: <b>${form.comena.toLowerCase()}<br></b>
-      Nombre Tutor: <b>${form.nombret.toLowerCase()}<br></b>
-      Telefono Tutor: <b>${form.telt.toLowerCase()}<br></b>
-      Dirrecion Tutor: <b>${form.diret.toLowerCase()}<br></b>
-      Email Tutor: <b>${form.emailt.toLowerCase()}<br></b>
-      Trabajo Tutor: <b>${form.trabajot.toLowerCase()}<br></b>
-      Cuántas horas de tu día dispones para dedicar a tu hijo/a?: <b>${form.horash.toLowerCase()}<br></b>
-      Qué te motiva a consultar con nosotros o formar parte de uno de nuestros programas?: <b>${form.moti.toLowerCase()}<br></b>
-      Comentarios o inquietudes: <b>${form.comenp.toLowerCase()}<br></b>
-      Programa: <b>${form.servicio.toLowerCase()}<br></b>
-      Modalidad: <b>${form.modalidad.toLowerCase()}<br></b>
-    
-
-
-
-
-
-
-
-
-
-
+            nombre_paciente: form.nombreh,
+            fecha_inicio: initialDate,
+            fecha_fin: finalDate,
+            tipo_cita: form.modalidad === 'Presencial' ? 'Presencial' : 'Online'
+        });
+        await models.formulario.create({json: form});
+        let m = logic.noPointer(mailOptions);
+        m.subject = `Cita Dra Tahirih Hawa Lunch with Love  "${form.nombreh.toUpperCase()}"`;
+        m.html = `
+        Hola Dra. Hawa, ¡En buena hora! tienes una cita nueva, a continuación los datos de la misma:
+        <br>
+        <br>
+        Nombre completo pasciente: <b>${form.nombreh.toUpperCase()}</b><br>
+        Peso:: <b>${form.peso.toUpperCase()}</b><br>
+        Estatura: <b>${form.estatura.toUpperCase()}</b><br>
+        Edad: <b>${form.edad.toUpperCase()}</b><br>
+        El niño tienes hermanos?: <b>${form.hermanos.toLowerCase()}<br></b>
+        Cantidad Hermanos: <b>${form.canther.toLowerCase()}<br></b>
+        Asiste a guarderia: <b>${form.guarderia.toLowerCase()}<br></b>
+        Fecha de Nacimiento: <b>${form.fechaEnString}<br></b>
+        Genero: <b>${form.genero.toLowerCase()}<br></b>
+        Forma parto: <b>${form.parto.toLowerCase()}<br></b>
+        Semanas del bebe al nacer: <b>${form.nacimiento.toLowerCase()}<br></b>
+        Peso al nacer: <b>${form.peson.toLowerCase()}<br></b>
+        Estatura al nacer: <b>${form.estaturan.toLowerCase()}<br></b>
+        Complicaciones del parto: <b>${form.partoc.toLowerCase()}<br></b>
+        Sufre el niño alguna enfermedad: <b>${form.enfermedad.toLowerCase()}<br></b>
+        Si la respuesta anterior es SI especifica cuál es la patología: <b>${form.enfermedadd.toLowerCase()}<br></b>
+        Cirugias previas: <b>${form.cirugiaspre.toLowerCase()}<br></b>
+        Sufre el niño de alguna alergia: <b>${form.alergia.toLowerCase()}<br></b>
+        Medicamento usado para la alergia: <b>${form.guarderia.toLowerCase()}<br></b>
+        Fuente alimentacion primeros 6 meses: <b>${form.guarderia.toLowerCase()}<br></b>
+        Comienzo alimentacion Complementaria: <b>${form.comple.toLowerCase()}<br></b>
+        Metodo alimentacion Complementaria: <b>${form.alimentacionc.toLowerCase()}<br></b>
+        Primeros alimentos ofrecido al bebe: <b>${form.primeros.toLowerCase()}<br></b>
+        A qué edad se introdujeron comidas que contenían sal y azúcar?: <b>${form.salya.toLowerCase()}<br></b>
+        Horarios de comidas establecidos actualmente: <b>${form.horariosc.toLowerCase()}<br></b>
+        ¿Cuántas veces al día come el niño?: <b>${form.ingesc.toLowerCase()}<br></b>
+        Cuál es el tiempo promedio que tu hijo/a dura en cada comida?: <b>${form.tiempop.toLowerCase()}<br></b>
+        Quién alimenta al niño la mayoría de las veces?: <b>${form.quiena.toLowerCase()}<br></b>
+        El niño como con la Familia: <b>${form.comefam.toLowerCase()}<br></b>
+        Lugar donde comen: <b>${form.lugarc.toLowerCase()}<br></b>
+        ¿Cuántas veces por semana le brinda alimentos tales como: carnes, pollo, hígado, pescado, morcilla?: <b>${form.cantal.toLowerCase()}<br></b>
+        Alergia Alimentarias: <b>${form.alergiaa.toLowerCase()}<br></b>
+        Si la respuesta anterior es SI cuéntame a cuál o cuáles alimentos es alérgico tu niño/a: <b>${form.alialer.toLowerCase()}<br></b>
+        Cambias la alimentacion cuando el niño esta enfermo: <b>${form.cambioali.toLowerCase()}<br></b>
+        Comenta datos de interés de la alimentación de tu hijo/a:: <b>${form.comena.toLowerCase()}<br></b>
+        Nombre Tutor: <b>${form.nombret.toLowerCase()}<br></b>
+        Telefono Tutor: <b>${form.telt.toLowerCase()}<br></b>
+        Dirrecion Tutor: <b>${form.diret.toLowerCase()}<br></b>
+        Email Tutor: <b>${form.emailt.toLowerCase()}<br></b>
+        Trabajo Tutor: <b>${form.trabajot.toLowerCase()}<br></b>
+        Cuántas horas de tu día dispones para dedicar a tu hijo/a?: <b>${form.horash.toLowerCase()}<br></b>
+        Qué te motiva a consultar con nosotros o formar parte de uno de nuestros programas?: <b>${form.moti.toLowerCase()}<br></b>
+        Comentarios o inquietudes: <b>${form.comenp.toLowerCase()}<br></b>
+        Programa: <b>${form.servicio.toLowerCase()}<br></b>
+        Modalidad: <b>${form.modalidad.toLowerCase()}<br></b>
 		`;
-		transporter.sendMail(m, async function (error, info) {
-			if (error) {
-				console.log(error);
-				res.json({status: false, message: 'Ha ocurrido un error en el proceso'});
-			} else {
-				let m = logic.noPointer(mailOptions);
-				m.subject = `Genesis Nouel – Asesora Lactancia Materna `;
-				m.to = form.email;
+        transporter.sendMail(m, async function (error, info) {
+            if (error) {
+                console.log(error);
+                res.json({status: false, message: 'Ha ocurrido un error en el proceso'});
+            } else {
+                console.log(form.emailt);
+                let m = logic.noPointer(mailOptions);
+                m.subject = `Genesis Nouel – Asesora Lactancia Materna `;
+                m.to = form.emailt;
 
-				m.html = `
+                m.html = `
           <hr class="mt-0 mb-60 " style="color: #F2B2B0"/>
         <div class="footer-made" style="text-align:center;color:#000; font-size:22px; background-color: #49A1D0">
           Dra. Tahirih Hawa - Lunch with Love RD<br>
@@ -163,7 +143,7 @@ router.post("/manageFormulario", async (req, res) => {
         </div>
         <br><br>
         <div style="text-align:justify">
-        Luego de un cordial y afectuoso saludo ${form.nombre.toUpperCase()}, me complace que formes parte de nuestra hermosa comunidad de padres que se interesan y preocupan  por educarse en cuanto al tema de la Lactancia Materna y cuidados del recién nacido
+        Luego de un cordial y afectuoso saludo ${form.nombreh.toUpperCase()}, me complace que formes parte de nuestra hermosa comunidad de padres que se interesan y preocupan  por educarse en cuanto al tema de la Lactancia Materna y cuidados del recién nacido
           </div>
 						<br><br>
             <div style="text-align:justify">
@@ -218,18 +198,18 @@ router.post("/manageFormulario", async (req, res) => {
 
                          </div>
 `;
-				transporter.sendMail(m, async function (error, info) {
-					if (error) {
-						res.json({
-							status: true,
-							message: `Cita creada exitósamente. ${form.modalidad === 'Online' ? `Sin embargo, el correo suministrado es inválido, no recibirá su correo de confirmación` : ''}`
-						});
-					} else {
-						res.json({status: true});
-					}
-				});
-			}
-		});
+                transporter.sendMail(m, async function (error, info) {
+                    if (error) {
+                        res.json({
+                            status: true,
+                            message: `Cita creada exitósamente. ${form.modalidad === 'Online' ? `Sin embargo, el correo suministrado es inválido, no recibirá su correo de confirmación` : ''}`
+                        });
+                    } else {
+                        res.json({status: true});
+                    }
+                });
+            }
+        });
     } catch (e) {
         console.log(e);
         res.json({status: false, message: 'Ha ocurrido un error en el proceso'});
@@ -258,11 +238,11 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/encode", async (req, res) => {
-	res.json(crypto.encrypt(req.body.text));
+    res.json(crypto.encrypt(req.body.text));
 });
 
 router.post("/decode", async (req, res) => {
-	res.json(crypto.decrypt(req.body.text));
+    res.json(crypto.decrypt(req.body.text));
 });
 
 try {

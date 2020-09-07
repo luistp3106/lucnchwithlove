@@ -7,7 +7,7 @@ const db        = {};
 const Sequelize = require('sequelize');
 
 const Op = Sequelize.Op;
-const DBNAME = 'madresmil';
+const DBNAME = 'lunchwithlovewebapp';
 const USER = 'postgres';
 const PASSWORD = '!nutkard.pass.asturias.2!'; // !nutkard.pass.asturias.2!
 const LOCALHOST = '127.0.0.1';
