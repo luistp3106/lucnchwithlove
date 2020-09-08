@@ -56,7 +56,7 @@ function ajax(method, url, data){
     return new Promise(function (resolve) {
         try {
             let xhr = new XMLHttpRequest();
-            xhr.open(method, `${location.protocol}//${location.hostname}:3032${url}`, true);
+            xhr.open(method, `${location.protocol}//${location.hostname}:3033${url}`, true);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.onload = function() {
                 try {
@@ -78,14 +78,14 @@ function ajax(method, url, data){
 }
 
 function getFullUrl(url){
-  return `${location.protocol}//${location.hostname}:3032${url}`;
+  return `${location.protocol}//${location.hostname}:3033${url}`;
 }
 
 function ajax2(method, url, data, contentType = "application/json") {
     return new Promise(function (resolve) {
         $.ajax ({
             type: method,
-            url: `${location.protocol}//${location.hostname}:3032${url}`,
+            url: `${location.protocol}//${location.hostname}:3033${url}`,
             dataType: "json",
             contentType: contentType,
             data: JSON.stringify(data),

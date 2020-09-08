@@ -16,6 +16,14 @@ function formatDateNoHour(date) {
     return `${("00"+date.getDate()).slice(-2)}/${("00"+(date.getMonth()+1)).slice(-2)}/${date.getFullYear()}`;
 }
 
+function cleanUserName(user, colList){
+    for (let i of colList) {
+        if (!compare(user[i])) {
+            user[i] = "";
+        }
+    }
+}
+
 function listOnString(list, funName){
     try {
         let str = "";
@@ -49,5 +57,6 @@ module.exports = {
     formatDate,
     listOnString,
     formatDateNoHour,
-    resetTimeUser
+    resetTimeUser,
+    cleanUserName
 };
